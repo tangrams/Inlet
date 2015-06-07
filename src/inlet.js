@@ -126,6 +126,7 @@ Inlet = (function() {
 
     //Handle clicks
     function onClick(ev) {
+
       var cursor = editor.getCursor(true);
       var token = editor.getTokenAt(cursor);
       cursorOffset = editor.cursorCoords(true, "page");
@@ -135,6 +136,8 @@ Inlet = (function() {
       var hslMatch = getMatch(cursor, 'hsl');
       var hexMatch = getMatch(cursor, 'hex');
       var rgbMatch = getMatch(cursor, 'rgb');
+      var vecMatch = getMatch(cursor, 'vec3');
+      // var arrayMatch = getMatch(cursor, 'array3');
 
       var pickerTop = (cursorOffset.top - topOffset);
       if (cursorOffset.top < topBoundary) {pickerTop = (cursorOffset.top + bottomOffset)}
@@ -175,7 +178,32 @@ Inlet = (function() {
           picked = Color.Space(picked, "W3>HSL>RGB>W3");
           pickerCallback(picked,'rgb')
         })
-      } else if(numberMatch) {
+      } else if(vecMatch) {
+        var color = vecMatch.string;
+        color = Color.Space(color, "VEC3>RGB>W3");
+        picker = new thistle.Picker(color);
+        picker.setCSS(color);
+        picker.presentModal(pickerLeft,pickerTop)
+        picker.on('changed',function() {
+          picked = picker.getCSS();
+          //translate hsl return to rgb
+          picked = Color.Space(picked, "W3>HSL>RGB>VEC3");
+          pickerCallback(picked,'vec3')
+        })
+      } 
+      // else if(arrayMatch) {
+      //   var color = arrayMatch.string;
+      //   color = Color.Space(color, "ARRAY3>RGB>W3");
+      //   picker = new thistle.Picker(color)
+      //   picker.setCSS( color );
+      //   picker.presentModal(pickerLeft,pickerTop)
+      //   picker.on('changed',function() {
+      //     picked = picker.getCSS()
+      //     picked = Color.Space(picked, "W3>HSL>RGB>ARRAY3");
+      //     pickerCallback(picked,'array3')
+      //   })
+      // } 
+      else if(numberMatch) {
         slider.value = 0;
         var value = parseFloat(numberMatch.string);
         var sliderRange = getSliderRange(value);
@@ -239,6 +267,18 @@ Inlet = (function() {
 
         case 'rgb':
           re = /rgb\((\d{1,3}),\s*(\d{1,3}),\s*(\d{1,3})\)/;
+          break;
+
+        case 'vec3':
+          re = /vec3\(\s*(\d\.|\d*\.?\d+)\s*,\s*(\d\.|\d*\.?\d+)\s*,\s*(\d\.|\d*\.?\d+)\s*\)/;
+          break;
+
+        case 'vec4':
+          re = /vec4\(\s*(\d\.|\d*\.?\d+)\s*,\s*(\d\.|\d*\.?\d+)\s*,\s*(\d\.|\d*\.?\d+)\s*,\s*(\d\.|\d*\.?\d+)\s*\)/;
+          break;
+
+        case 'array3':
+          re = /\[\s*(\d\.|\d*\.?\d+)\s*,\s*(\d\.|\d*\.?\d+)\s*,\s*(\d\.|\d*\.?\d+)\s*\]/;
           break;
 
         case 'hex':

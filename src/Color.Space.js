@@ -91,6 +91,56 @@ root.RGBA_W3 = function(o) {
 	return "rgba(" + (o.R >> 0) + "," + (o.G >> 0) + "," + (o.B >> 0) + "," + alpha + ")"; 
 };
 
+root.RGB_VEC3 = function(o) { 
+	return "vec3(" + ((o.R >> 0)/255).toFixed(3) + "," + ((o.G >> 0)/255).toFixed(3) + "," + ((o.B >> 0)/255).toFixed(3) + ")";
+};
+
+root.RGBA_VEC4 = function(o) { 
+	var alpha = typeof(o.A) === "number" ? o.A / 255 : 1;
+	return "vec4(" + ((o.R >> 0)/255).toFixed(3) + "," + ((o.G >> 0)/255).toFixed(3) + "," + ((o.B >> 0)/255).toFixed(3) + "," + alpha.toFixed(3) + ")";
+};
+
+
+root.RGB_ARRAY3 = function(o) { 
+	return "[" + ((o.R >> 0)/255).toFixed(3) + "," + ((o.G >> 0)/255).toFixed(3) + "," + ((o.B >> 0)/255).toFixed(3) + "]";
+};
+
+
+root.VEC3_RGB = function(o) {
+	var start = o.indexOf("(") + 1;
+	var end = o.indexOf(")");
+	o = o.substr(start, end - start).split(",");
+	return {
+		R: parseFloat(o[0])*255,
+		G: parseFloat(o[1])*255,
+		B: parseFloat(o[2])*255
+	};
+}
+
+root.VEC4_RGBA = function(o) {
+	var start = o.indexOf("(") + 1;
+	var end = o.indexOf(")");
+	o = o.substr(start, end - start).split(",");
+	return {
+		R: parseFloat(o[0])*255,
+		G: parseFloat(o[1])*255,
+		B: parseFloat(o[2])*255,
+		A: parseFloat(o[3])*255
+	};
+}
+
+root.ARRAY3_RGB = function(o) {
+	var start = o.indexOf("[") + 1;
+	var end = o.indexOf("]");
+	o = o.substr(start, end - start).split(",");
+	console.log(o);
+	return {
+		R: parseFloat(o[0])*255,
+		G: parseFloat(o[1])*255,
+		B: parseFloat(o[2])*255
+	};
+}
+
 root.W3_RGB = function(o) {
 	o = o.substr(4, o.length - 5).split(",");
 	return {

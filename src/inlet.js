@@ -136,8 +136,8 @@ Inlet = (function() {
       var hslMatch = getMatch(cursor, 'hsl');
       var hexMatch = getMatch(cursor, 'hex');
       var rgbMatch = getMatch(cursor, 'rgb');
-      var vecMatch = getMatch(cursor, 'vec3');
-      // var arrayMatch = getMatch(cursor, 'array3');
+      var vec3Match = getMatch(cursor, 'vec3');
+      // var array3Match = getMatch(cursor, 'array3');
 
       var pickerTop = (cursorOffset.top - topOffset);
       if (cursorOffset.top < topBoundary) {pickerTop = (cursorOffset.top + bottomOffset)}
@@ -178,8 +178,8 @@ Inlet = (function() {
           picked = Color.Space(picked, "W3>HSL>RGB>W3");
           pickerCallback(picked,'rgb')
         })
-      } else if(vecMatch) {
-        var color = vecMatch.string;
+      } else if(vec3Match) {
+        var color = vec3Match.string;
         color = Color.Space(color, "VEC3>RGB>W3");
         picker = new thistle.Picker(color);
         picker.setCSS(color);
@@ -191,8 +191,8 @@ Inlet = (function() {
           pickerCallback(picked,'vec3')
         })
       } 
-      // else if(arrayMatch) {
-      //   var color = arrayMatch.string;
+      // else if(array3Match) {
+      //   var color = array3Match.string;
       //   color = Color.Space(color, "ARRAY3>RGB>W3");
       //   picker = new thistle.Picker(color)
       //   picker.setCSS( color );
